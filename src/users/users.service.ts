@@ -19,18 +19,25 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.usersRepository.find()
   }
 
   findOne(username: string) {
-    return `This action returns a #${username} user`;
+    const res = this.usersRepository.findOneBy({username})
+    if(res != null) return res
+    else return `Account with Username '${username}' not found..!`
   }
 
-  update(username: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${username} user`;
+  async updateUserByUsername(username: string, updateUserDto: UpdateUserDto): Promise<User|undefined> {
+    const user = await this.usersRepository.findOneBy({username})
+    if(!user) return undefined
+    user.password = updateUserDto.password
+    user.updated_at = updateUserDto.updated_at
+    const updatedUser = await this.entityManger.save(User, user)
+    return updatedUser
   }
 
   remove(username: string) {
-    return `This action removes a #${username} user`;
+    this.usersRepository.delete(username)
   }
 }
