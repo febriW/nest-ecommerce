@@ -23,9 +23,7 @@ export class UsersService {
   }
 
   findOne(username: string) {
-    const res = this.usersRepository.findOneBy({username})
-    if(res != null) return res
-    else return `Account with Username '${username}' not found..!`
+    return this.usersRepository.findOneBy({username})
   }
 
   async updateUserByUsername(username: string, updateUserDto: UpdateUserDto): Promise<User|undefined> {
