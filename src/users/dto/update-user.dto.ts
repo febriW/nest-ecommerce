@@ -1,23 +1,28 @@
-import { CreateUserDto } from './create-user.dto'
+import { ApiProperty } from '@nestjs/swagger';
 import {
     IsEmail,
-    IsDate,
-    IsString
+    IsString,
+    IsDateString
 } from "class-validator"
 
 export class UpdateUserDto {
     @IsString()
+    @ApiProperty()
     password: string;
 
     @IsString()
+    @ApiProperty()
     firstname: string;
 
     @IsString()
+    @ApiProperty()
     lastname: string;
 
     @IsEmail({},{message: 'Invalid Email'})
+    @ApiProperty()
     email: string;
 
-    @IsDate({message: 'Invalid Date Format'})
+    @IsDateString({},{message: 'Invalid Date Format'})
+    @ApiProperty()
     updated_at: Date;
 }
