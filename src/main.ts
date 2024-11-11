@@ -11,7 +11,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Mini E-commerce')
-    .setDescription('Example Description')
+    .setDescription('webservice for mini e-commerce apps')
     .setVersion('0.1')
     .addTag('ecommerce', 'Endpoint for ecommerce')
     .addTag('users', 'Users Endpoint')

@@ -30,7 +30,6 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({username})
     if(!user) return undefined
     user.password = updateUserDto.password
-    user.updated_at = updateUserDto.updated_at
     const updatedUser = await this.entityManger.save(User, user)
     return updatedUser
   }

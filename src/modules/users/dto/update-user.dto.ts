@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
     IsEmail,
-    IsString,
-    IsDateString
+    IsString
 } from "class-validator"
 
 export class UpdateUserDto {
@@ -21,8 +20,4 @@ export class UpdateUserDto {
     @IsEmail({},{message: 'Invalid Email'})
     @ApiProperty()
     email: string;
-
-    @IsDateString({},{message: 'Invalid Date Format'})
-    @ApiProperty()
-    updated_at: Date;
 }
