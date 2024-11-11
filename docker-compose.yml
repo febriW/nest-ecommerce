@@ -1,7 +1,28 @@
 services:
-  mysql:
-    image: mysql
+  app:
+    container_name: nest-js-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nest-js-api
+    volumes:
+      - "./app:/go/src/app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    container_name: db-mysql
+    image: mysql:8.0
     env_file:
       - .env
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+    volumes:
+      - "./.service-db:/var/lib/mysql"
     ports:
-      - '3306:3306'
+      - "3307:3306"
