@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import * as bcrypt from "bcrypt"
 
 @Entity()
 export class User {
-    @PrimaryColumn()
+    @PrimaryColumn({unique: true})
     username: string;
 
     @Column()
@@ -14,14 +15,19 @@ export class User {
     @Column()
     lastname: string;
 
-    @Column()
+    @Column({default: 'testing@testing.com'})
     email: string;
 
-    @Column({default: '2023-08-01' })
+    @CreateDateColumn({type: 'timestamp'})
     created_at : Date;
 
-    @Column()
+    @CreateDateColumn({type: 'timestamp'})
     updated_at : Date;
+
+    @BeforeInsert()
+    async hashingPassword() {
+        this.password = await bcrypt.hash(this.password, 15)
+    }
 
     constructor(user: Partial<User>) {
         Object.assign(this, user)
