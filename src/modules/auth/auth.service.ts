@@ -8,17 +8,23 @@ import * as bcrypt from 'bcrypt'
 export class AuthService {
     constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
-    async signIn(signInDto: SignInDto): Promise<any> {
+    async signIn(signInDto: SignInDto): Promise<{access_token: string}> {
         const user = await this.usersService.findOne(signInDto.username)
         if(!user)
-            throw new UnauthorizedException()
+            throw new UnauthorizedException('Unauthorized' , {
+               cause: new Error(),
+               description: 'User related not found or registered yet!' 
+            })
 
         const password = await bcrypt.compare(signInDto.password, user.password)
-        if(password){
-            const payload = {username: user.username, sub: user.email}
-            return {access_token: await this.jwtService.signAsync(payload)}
+        const payload = {username: user.username, sub: user.email}
+
+        if(!password){
+            throw new UnauthorizedException('Unauthorized', {
+                cause: new Error(),
+                description: 'Password not matched!'
+            })
         }
-            
-        return new UnauthorizedException()
+        return {access_token: await this.jwtService.signAsync(payload)}
     }
 }
