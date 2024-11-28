@@ -1,8 +1,16 @@
 {
   "name": "nest-ecommerce",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "webservice for mini e-commerce using nestjs",
+  "author": {
+    "name": "Febri W",
+    "url": "https://github.com/febriW",
+    "email": "febriwanda26@gmail.com"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/febriW/nest-ecommerce"
+  },
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -19,7 +27,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:run": "npm run typeorm migration:run -- -d ./src/database/database.module.ts"
+    "seed": "typeorm-extension seed:run -d ./src/database/database-migration.module.ts",
+    "migration:create": "npm run typeorm migration:create",
+    "migration:execute": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/database/database-migration.module.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
