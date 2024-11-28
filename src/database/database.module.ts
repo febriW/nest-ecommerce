@@ -1,6 +1,7 @@
-import { Module } from "@nestjs/common"
+import { Module, OnModuleInit } from "@nestjs/common"
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from "@nestjs/typeorm"
+import { DataSource } from "typeorm";
 
 @Module({
     imports: [
@@ -13,11 +14,31 @@ import { TypeOrmModule } from "@nestjs/typeorm"
                 username: configService.getOrThrow('MYSQL_ROOT_USERNAME'),
                 password: configService.getOrThrow('MYSQL_ROOT_PASSWORD'),
                 autoLoadEntities: true,
-                synchronize: configService.getOrThrow('SYNCHRONIZE')
+                migrations: [__dirname + '/../../migrations/*.js'],
+                synchronize: false,
+                logging: 'all',
+                logger: 'advanced-console'
             }),
+            
             inject: [ConfigService]
         }),
     ],
 })
 
-export class DatabaseModule {}
+export class DatabaseModule implements OnModuleInit {
+    constructor(private dataSource: DataSource) {}
+  
+    async onModuleInit() {
+      console.log('Running migrations...')
+      if (!this.dataSource.isInitialized) {
+        console.error('DataSource is not initialized. Skipping migrations.')
+        return
+      }
+      try {
+        await this.dataSource.runMigrations();
+        console.log('Migrations have been successfully executed.')
+      } catch (error) {
+        console.error('Error during migration execution:', error)
+      }
+    }
+  }
