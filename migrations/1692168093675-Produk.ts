@@ -29,7 +29,8 @@ export class Produk1692168093675 implements MigrationInterface {
                         type: 'int'
                     }
                 ]
-            })
+            }),
+            true
         ),
         await queryRunner.createForeignKey(
             "produk",
@@ -43,6 +44,7 @@ export class Produk1692168093675 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable("produk")
     }
 
 }
