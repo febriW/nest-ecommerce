@@ -1,21 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository, In } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Roles } from '../roles/entities/roles.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly entityManger: EntityManager,
+    private readonly entityManager: EntityManager,
     ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = new User(createUserDto)
-    await this.entityManger.save(user)
+    const existingAccount =  await this.entityManager.findOne(User, {
+      where: { username: createUserDto.username },
+    })
+
+    if (existingAccount) {
+      throw new ConflictException('Account already registered with this username.');
+    }
+
+    const rolesIds = createUserDto.roles || [3];
+    const defaultRoles = await this.entityManager.findBy(Roles, {
+      id: In(rolesIds)
+    });
+    const user = this.entityManager.create(User, {
+      ...createUserDto,
+      roles: defaultRoles,
+    });
+    await this.entityManager.save(user)
   }
 
   findAll() {
@@ -30,7 +46,7 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({username})
     if(!user) return undefined
     user.password = updateUserDto.password
-    const updatedUser = await this.entityManger.save(User, user)
+    const updatedUser = await this.entityManager.save(User, user)
     return updatedUser
   }
 
