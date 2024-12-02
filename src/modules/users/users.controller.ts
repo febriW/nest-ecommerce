@@ -1,10 +1,8 @@
-import { Controller, Get, Post, Put, Body, Param, Delete, HttpCode, Request, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Body, Param, Delete, Request, HttpStatus, HttpCode, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto, UpdateRoleDto } from './dto/user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { HttpException } from '@nestjs/common';
-// import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from '../roles/decorator/roles.decorator';
 import { Public } from '../auth/decorator/public.decorator';
 
@@ -45,7 +43,15 @@ export class UsersController {
     return updatedUser
   }
 
-  // @UseGuards(AuthGuard)
+  @Patch(':username')
+  @HttpCode(204)
+  @Roles('superadmin')
+  async UpdateRole(@Param('username') username: string, @Body() role: UpdateRoleDto) {
+    const updateRole = await this.usersService.updateRoles(username, role)
+    if(updateRole?.msg) throw new BadRequestException(updateRole.msg)
+    return 
+  }
+
   @Delete(':username')
   @Roles('superadmin', 'admin')
   async remove(@Param('username') username: string) {
