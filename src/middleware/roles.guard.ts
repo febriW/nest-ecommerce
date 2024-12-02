@@ -10,26 +10,6 @@ import { Roles } from 'src/modules/roles/entities/roles.entity';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector, private dataSource: DataSource) {}
 
-  // canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-  //   const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
-  //     context.getHandler(),
-  //     context.getClass()
-  //   ]);
-
-  //   if (!requiredRoles) {
-  //     return true;
-  //   }
-
-  //   const { user }: { user: User} = context.switchToHttp().getRequest()
-  //   if (!user.roles || !Array.isArray(user.roles)) {
-  //     throw new ForbiddenException('User roles not found.');
-  //   }
-  //   if (!user || !user.roles.some((role) => requiredRoles.includes(role.name))) {
-  //     throw new ForbiddenException('You do not have the required roles.')
-  //   }
-  //   return true
-  // }
-
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
       context.getHandler(),
