@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import {
     IsEmail,
     IsString,
@@ -35,3 +35,7 @@ export class CreateUserDto {
     @ApiProperty({ type: [Number], description: 'Array of role IDs' })
     roles?: number[];
 }
+
+
+export class UpdateRoleDto extends PickType(CreateUserDto, ['roles'] as const) {}
+export class UpdateUserDto extends PickType(CreateUserDto, ['password', 'firstname', 'lastname', 'email'] as const) {}
