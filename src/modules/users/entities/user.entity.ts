@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
 import * as bcrypt from "bcrypt"
 import { Roles } from "src/modules/roles/entities/roles.entity";
 
@@ -34,6 +34,7 @@ export class User {
     updated_at : Date;
 
     @BeforeInsert()
+    @BeforeUpdate()
     async hashingPassword() {
         this.password = await bcrypt.hash(this.password, 15)
     }
