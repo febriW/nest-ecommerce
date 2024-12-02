@@ -14,7 +14,7 @@ async function bootstrap() {
     .setDescription('webservice for mini e-commerce apps')
     .setVersion('0.1')
     .addTag('ecommerce', 'Endpoint for ecommerce')
-    .addTag('users', 'Users Endpoint')
+    .addTag('users', 'All Users Service Endpoint')
     .addTag('authentication', 'Authentication Endpoints')
     .build()
   const document = SwaggerModule.createDocument(app, config)
