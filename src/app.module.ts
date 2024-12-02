@@ -3,19 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './modules/users/users.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { AuthGuard } from './modules/auth/auth.guard';
+import { AuthGuard } from './middleware/auth.guard';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { RolesGuard } from './middleware/roles.guard';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ListModules } from './modules'
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     DatabaseModule,
-    UsersModule,
-    AuthModule,
+    ...ListModules
   ],
   controllers: [AppController],
   providers: [
