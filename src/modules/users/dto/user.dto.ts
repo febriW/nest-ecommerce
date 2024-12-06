@@ -32,10 +32,10 @@ export class CreateUserDto {
     @IsOptional()
     @IsArray()
     @ArrayNotEmpty()
-    @ApiProperty({ type: [Number], description: 'Array of role IDs' })
-    roles?: number[];
+    @ApiProperty({ type: [Number], description: 'Role of user' })
+    role: number;
 }
 
 
-export class UpdateRoleDto extends PickType(CreateUserDto, ['roles'] as const) {}
+export class UpdateRoleDto extends PickType(CreateUserDto, ['role'] as const) {}
 export class UpdateUserDto extends PickType(CreateUserDto, ['password', 'firstname', 'lastname', 'email'] as const) {}

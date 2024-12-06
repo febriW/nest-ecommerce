@@ -47,7 +47,7 @@ export class UsersController {
   @HttpCode(204)
   @Roles('superadmin')
   async UpdateRole(@Param('username') username: string, @Body() role: UpdateRoleDto) {
-    const updateRole = await this.usersService.updateRoles(username, role)
+    const updateRole = await this.usersService.updateRole(username, role)
     if(updateRole?.msg) throw new BadRequestException(updateRole.msg)
     return 
   }

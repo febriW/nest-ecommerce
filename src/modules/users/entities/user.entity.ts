@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import * as bcrypt from "bcrypt"
 import { Roles } from "src/modules/roles/entities/roles.entity";
 
@@ -7,13 +7,9 @@ export class User {
     @PrimaryColumn({unique: true})
     username: string;
 
-    @ManyToMany(() => Roles, (role) => role.users, { cascade: true, eager: true })
-    @JoinTable({
-        name: 'user_roles',
-        joinColumn: { name: 'usernameAccount', referencedColumnName: 'username' },
-        inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
-    })
-    roles: Roles[]
+    @ManyToOne(() => Roles, (role) => role.users, { eager: true })
+    @JoinColumn({ name: 'role_id' })
+    role: Roles
 
     @Column()
     password: string;

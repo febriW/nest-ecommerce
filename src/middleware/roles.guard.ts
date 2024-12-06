@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (!requiredRoles || requiredRoles.length === 0) {
+    if (!requiredRoles) {
       return true
     }
 
@@ -27,19 +27,19 @@ export class RolesGuard implements CanActivate {
       throw new ForbiddenException('Unauthorized');
     }
 
-    const userWithRoles = await this.dataSource
+    const userWithRole = await this.dataSource
       .getRepository(User)
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.roles', 'role')
-      .where('user.username = :username', { username: user.username })
-      .getOne()
+      .findOne({
+        where: { username: user.username },
+        relations: ['role'],
+      });
 
-    if (!userWithRoles || !userWithRoles.roles) {
+    if (!userWithRole || !userWithRole.role) {
       throw new ForbiddenException('User roles not found.')
     }
 
-    const userRoles = userWithRoles.roles.map((role: Roles) => role.name)
-    const hasRole = userRoles.some((role: string) => requiredRoles.includes(role))
+    const userRole = userWithRole.role.name
+    const hasRole = requiredRoles.includes(userRole)
     if (!hasRole) {
       throw new ForbiddenException('You do not have the required roles.')
     }
