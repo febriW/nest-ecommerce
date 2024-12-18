@@ -2,9 +2,8 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 import {
     IsEmail,
     IsString,
-    IsOptional,
-    ArrayNotEmpty, 
-    IsArray
+    IsNumber,
+    IsOptional
 } from "class-validator"
 
 export class CreateUserDto {
@@ -29,10 +28,9 @@ export class CreateUserDto {
     @ApiProperty()
     email: string;
 
+    @IsNumber()
     @IsOptional()
-    @IsArray()
-    @ArrayNotEmpty()
-    @ApiProperty({ type: [Number], description: 'Role of user' })
+    @ApiProperty({ type: Number, description: 'Role of user' })
     role: number;
 }
 

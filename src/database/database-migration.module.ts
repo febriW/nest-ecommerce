@@ -16,7 +16,7 @@ export const AppDataSource: DataSourceOptions = {
     password: configService.getOrThrow('MYSQL_ROOT_PASSWORD'),
     synchronize: configService.getOrThrow('SYNCHRONIZE'),
     migrations: ['migrations/*.ts'],
-    entities: [ '../modules/**/entities/*.entity.ts'],
+    entities: [ '../modules/**/*.entity.ts'],
     logging: 'all',
     logger: 'advanced-console'
 }

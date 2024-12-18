@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { RolesDto } from "./dto/roles.dto";
-import { Roles } from "./entities/roles.entity";
+import { Roles } from "./roles.entity";
 import { EntityManager, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 

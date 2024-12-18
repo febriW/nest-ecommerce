@@ -4,12 +4,12 @@ import {
     Table, 
     TableForeignKey } from "typeorm"
 
-export class Produk1692168093675 implements MigrationInterface {
+export class Product1692168093675 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: 'produk',
+                name: 'product',
                 columns: [
                     {
                         name: 'id',
@@ -17,34 +17,21 @@ export class Produk1692168093675 implements MigrationInterface {
                         isPrimary: true
                     },
                     {
-                        name: 'category',
-                        type: 'varchar'
-                    },
-                    {
-                        name: 'nama',
+                        name: 'name',
                         type: 'varchar',
                     },
                     {
-                        name: 'stok',
+                        name: 'stock',
                         type: 'int'
                     }
                 ]
             }),
             true
-        ),
-        await queryRunner.createForeignKey(
-            "produk",
-            new TableForeignKey({
-                columnNames: ["category"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "category",
-                onDelete: "CASCADE",
-            }),
         )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("produk")
+        await queryRunner.dropTable("product")
     }
 
 }

@@ -12,7 +12,7 @@ import { ListModules } from './modules'
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     DatabaseModule,
-    ...ListModules
+    ...ListModules,
   ],
   controllers: [AppController],
   providers: [

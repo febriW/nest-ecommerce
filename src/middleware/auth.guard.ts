@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../modules/auth/constants";
-import { Request } from "express";
+import { Request, Response } from "express";
 import { Reflector } from "@nestjs/core";
 
 @Injectable()
@@ -27,16 +27,34 @@ export class AuthGuard implements CanActivate {
         }
 
         const request = context.switchToHttp().getRequest()
+        const response = context.switchToHttp().getResponse<Response>()
         const token = this.extractTokenFromHeader(request)
-        if(!token) throw new UnauthorizedException()
-
+        if(!token) throw new UnauthorizedException("You're not allowed to access this service")
         try {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret
             })
             request['user'] = payload
-        } catch {
-            throw new UnauthorizedException()
+        } catch (error) {
+            const refreshToken = request.cookies?.refresh_token || request.headers['x-refresh-token']
+            if (!refreshToken) throw new UnauthorizedException('Refresh token not provided')
+
+            try {
+                const refreshPayload = await this.jwtService.verifyAsync(refreshToken, {
+                    secret: jwtConstants.refresh_secret
+                })
+
+                const newAccessToken = await this.jwtService.signAsync(
+                    { username: refreshPayload.username, sub: refreshPayload.sub },
+                    { secret: jwtConstants.secret, expiresIn: '2h'}
+                )
+
+                response.setHeader('x-access-token', newAccessToken)
+                request['user'] = refreshPayload
+                return true
+            } catch {
+                throw new UnauthorizedException("You're not allowed to access this service", "1003")
+            }
         }
         return true
     }
